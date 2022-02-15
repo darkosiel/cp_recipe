@@ -1,0 +1,63 @@
+name: Cyberpunk
+version: v1.0
+author: mysty
+description: A recipe to create a cyberpunk themed server for FiveM.
+
+variables:
+  steam_webApiKey: "none"
+
+tasks:
+  # Download default CFX resources first
+  - action: download_github
+    src: https://github.com/citizenfx/cfx-server-data
+    ref: master
+    subpath: resources
+    dest: ./resources
+
+  # Create a tmp dir and download recipe and cfg files
+  - action: ensure_dir
+    path: ./tmp/
+
+  - action: download_github
+    src: https://github.com/mystyleigh/cp_recipe
+    dest: ./tmp/cp_recipe
+    
+  - action: download_github
+    src: https://github.com/zap-fivem/esx_12
+    dest: ./resources/[esx]
+
+  - action: move_path
+    src: ./tmp/cp_recipe/server.cfg
+    dest: ./server.cfg
+
+  - action: move_path
+    src: ./tmp/cp_recipe/logo.png
+    dest: ./logo.png
+
+  - action: replace_string
+    file: /resources/[esx]/esx_final.sql
+    search: "es_extended"
+    replace: "{{dbName}}"
+
+  - action: connect_database
+  - action: query_database
+    file: ./resources/[esx]/esx_final.sql
+
+  # other required resources
+  - action: download_github
+    src: https://github.com/Blumlaut/EasyAdmin
+    ref: ad774ebd8de60f8423ed520b6f51ae73bd3797b0
+    dest: ./resources/EasyAdmin
+
+  - action: download_github
+    src: https://github.com/brouznouf/fivem-mysql-async
+    ref: c5fa317a65acfe2eef453257e19e3b4fde137089
+    dest: ./resources/mysql-async
+
+  - action: download_github
+    src: https://github.com/Bob74/bob74_ipl
+    ref: master
+    dest: ./resources/bob74_ipl
+    
+  - action: remove_path
+    path: ./tmp
