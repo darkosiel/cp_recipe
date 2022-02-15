@@ -1,5 +1,5 @@
 name: Cyberpunk
-version: v1.0
+version: v0.1
 author: mysty
 description: A recipe to create a cyberpunk themed server for FiveM.
 
@@ -14,17 +14,13 @@ tasks:
     subpath: resources
     dest: ./resources
 
-  # Create a tmp dir and download recipe and cfg files
+  # Download server.cfg and logo
   - action: ensure_dir
     path: ./tmp/
 
   - action: download_github
     src: https://github.com/mystyleigh/cp_recipe
     dest: ./tmp/cp_recipe
-    
-  - action: download_github
-    src: https://github.com/zap-fivem/esx_12
-    dest: ./resources/[esx]
 
   - action: move_path
     src: ./tmp/cp_recipe/server.cfg
@@ -34,6 +30,11 @@ tasks:
     src: ./tmp/cp_recipe/logo.png
     dest: ./logo.png
 
+  # Download ESX files
+  - action: download_github
+    src: https://github.com/zap-fivem/esx_12
+    dest: ./resources/[esx]
+    
   - action: replace_string
     file: /resources/[esx]/esx_final.sql
     search: "es_extended"
